@@ -1,7 +1,18 @@
+"use client";
 import { Popcorn, Search } from "lucide-react";
 import Image from "next/image";
 
-export default function HeroSection() {
+interface IHeroSectionProps {
+  movies: any[];
+  searchTerm: string;
+  setSearch: (value: string) => void;
+}
+
+export default function HeroSection({
+  movies,
+  searchTerm,
+  setSearch,
+}: IHeroSectionProps) {
   return (
     <header className="relative h-[70vh] w-full ">
       <div className="w-5/12 z-10 top-1/2 -translate-y-1/2 absolute left-1/2 -translate-x-1/2">
@@ -19,21 +30,39 @@ export default function HeroSection() {
           <input
             className="mb-10 w-full h-full rounded-xl pl-10 pr-10 outline-none border-none bg-dark-black"
             placeholder="Search for movies..."
+            value={searchTerm}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
       <div className="grid grid-cols-5 gap-1 opacity-60 absolute inset-0">
-        {[...Array(5)].map((_, i) => (
-          <div key={i}>
-            <Image
-              src={`/movie-img/movie-${i + 1}.webp`}
-              alt={`Movie ${i + 1}`}
-              className="h-full w-full object-cover"
-              width={250}
-              height={250}
-            />
-          </div>
-        ))}
+        {movies.length >= 5
+          ? movies.map((movie, i) => (
+              <div key={movie.id}>
+                <Image
+                  src={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      : "/placeholder.jpg"
+                  }
+                  alt={movie.title}
+                  className="h-full w-full object-cover"
+                  width={250}
+                  height={250}
+                />
+              </div>
+            ))
+          : [...Array(5)].map((_, i) => (
+              <div key={i}>
+                <Image
+                  src={`/movie-img/movie-${i + 1}.webp`}
+                  alt={`Movie ${i + 1}`}
+                  className="h-full w-full object-cover"
+                  width={250}
+                  height={250}
+                />
+              </div>
+            ))}
       </div>
       <div className="absolute inset-0 bg-linear-to-t from-woodsmoke via-woodsmoke/80 to-transparent"></div>
       <div className="absolute inset-0 bg-linear-to-t from-woodsmoke/90 via-transparent to-woodsmoke/90"></div>
